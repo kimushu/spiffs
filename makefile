@@ -56,6 +56,9 @@ ALLOBJFILES += $(OBJFILES)
 
 DEPENDENCIES = $(DEPFILES) 
 
+all:
+include nios2.mk
+
 # link object files, create binary
 $(BINARY): $(ALLOBJFILES)
 	@echo "... linking"
@@ -72,6 +75,7 @@ $(OBJFILES) : ${builddir}/%.o:%.c
 $(DEPFILES) : ${builddir}/%.d:%.c
 		@echo "... depend $@"; \
 		rm -f $@; \
+		${MKDIR} $(dir $@)
 		${CC} $(COMPILEROPTIONS) -M $< > $@.$$$$; \
 		sed 's,\($*\)\.o[ :]*, ${builddir}/\1.o $@ : ,g' < $@.$$$$ > $@; \
 		rm -f $@.$$$$
@@ -93,3 +97,4 @@ clean:
 	@rm -f ${builddir}/*.o
 	@rm -f ${builddir}/*.d
 	@rm -f ${builddir}/*.elf
+
